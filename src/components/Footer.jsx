@@ -1,11 +1,41 @@
 import styles from "../style";
 import { logo } from "../assets";
 import { footerLinks, socialMedia } from "../constants";
+import {motion,useInView,useAnimation } from "framer-motion";
+import { useEffect, useRef } from "react";
 
-const Footer = () => (
+const Footer = () => {
+
+const ref =useRef(null);
+const isInView=useInView(ref,{once:true});
+const mainControls = useAnimation();
+
+useEffect(()=>{
+console.log(isInView);
+if(isInView){
+mainControls.start("visible");
+
+}
+
+},[isInView])
+
+
+
+  return(
   <section className={`${styles.flexCenter} ${styles.paddingY} flex-col`}>
-    <div className={`${styles.flexStart} md:flex-row flex-col mb-8 w-full`}>
-      <div className="flex-[1] flex flex-col justify-start mr-10">
+    <div
+     className={`${styles.flexStart} md:flex-row flex-col mb-8 w-full`}>
+      <motion.div
+      ref={ref}
+   variants={{
+hidden: {opacity:0, x:-200},
+visible: {opacity:1, x: 0}
+        }}
+      
+      initial="hidden"
+      animate={mainControls}
+      transition={{duration:0.25,delay:0.5}}
+      className="flex-[1] flex flex-col justify-start mr-10">
         <img
           src={logo}
           alt="hoobank"
@@ -14,7 +44,7 @@ const Footer = () => (
         <p className={`${styles.paragraph} mt-4 max-w-[312px]`}>
           A new way to make the payments easy, reliable and secure.
         </p>
-      </div>
+      </motion.div>
 
       <div className="flex-[1.5] w-full flex flex-row justify-between flex-wrap md:mt-0 mt-10">
         {footerLinks.map((footerlink) => (
@@ -24,14 +54,23 @@ const Footer = () => (
             </h4>
             <ul className="list-none mt-4">
               {footerlink.links.map((link, index) => (
-                <li
+                <motion.li
+                ref={ref}
+   variants={{
+hidden: {opacity:0},
+visible: {opacity:1}
+        }}
+      
+      initial="hidden"
+      animate={mainControls}
+      transition={{duration:0.25,delay:0.35*index}}
                   key={link.name}
                   className={`font-poppins font-normal text-[16px] leading-[24px] text-dimWhite hover:text-secondary cursor-pointer ${
                     index !== footerlink.links.length - 1 ? "mb-4" : "mb-0"
                   }`}
                 >
                   {link.name}
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>
@@ -46,7 +85,13 @@ const Footer = () => (
 
       <div className="flex flex-row md:mt-0 mt-6">
         {socialMedia.map((social, index) => (
+
+
+
+
           <img
+
+
             key={social.id}
             src={social.icon}
             alt={social.id}
@@ -59,6 +104,6 @@ const Footer = () => (
       </div>
     </div>
   </section>
-);
+)}
 
 export default Footer;

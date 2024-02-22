@@ -1,10 +1,42 @@
 import { card } from "../assets";
 import styles, { layout } from "../style";
 import Button from "./Button";
+import {motion,useInView,useAnimation } from "framer-motion";
+import { useEffect, useRef } from "react";
+const CardDeal = () => {
 
-const CardDeal = () => (
+const ref =useRef(null);
+const isInView=useInView(ref,{once:true});
+const mainControls = useAnimation();
+
+useEffect(()=>{
+console.log(isInView);
+if(isInView){
+mainControls.start("visible");
+
+}
+
+},[isInView])
+
+
+
+
+
+  return(
   <section className={`flex md:flex-row flex-col ${styles.paddingY}`}>
-    <div className={ `flex  flex-col  justify-center items-start`}>
+    <motion.div
+    
+     ref={ref}
+   variants={{
+hidden: {opacity:0, x: -200},
+visible: {opacity:1, x: 0}
+        }}
+      
+      initial="hidden"
+      animate={mainControls}
+      transition={{duration:0.75,delay:0.5}}
+      
+      className={ `flex  flex-col  justify-center items-start`}>
       <h2 className=" mb-6 xs:text-[48px] text-[40px] text-white xs:leading-[76.8px] leading-[66.8px] font-poppins font-semibold">
         Find a better card deal <br className="sm:block hidden" /> in few easy
         steps.
@@ -15,12 +47,22 @@ const CardDeal = () => (
       </p>
 
       <Button style={`mt-10 `} />
-    </div>
+    </motion.div>
 
-    <div className={`flex-1 flex ${styles.flexCenter} md:ml-10 ml-0 md:mt-0 mt-10 relative`}>
+    <motion.div
+     ref={ref}
+   variants={{
+hidden: {opacity:0, y: 200},
+visible: {opacity:1, y: 0}
+        }}
+      
+      initial="hidden"
+      animate={mainControls}
+      transition={{duration:0.75,delay:0.5}}
+      
+      className={`flex-1 flex ${styles.flexCenter} md:ml-10 ml-0 md:mt-0 mt-10 relative`}>
       <img src={card} alt="billing" className="sm:w-[85%] w-[100%] h-[100%]" />
-    </div>
+    </motion.div>
   </section>
-);
-
+)}
 export default CardDeal;
